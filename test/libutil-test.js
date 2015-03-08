@@ -77,58 +77,6 @@ exports.test0 = function(testcb) {
             wfcb();
         },
         function(wfcb) {
-            log('libutil.waterfall magic args');
-            function dosomething(arg1, arg2, callback) {
-                assert(arg1 == 'abc');
-                assert(arg2 == '123');
-                process.nextTick(function() {
-                    callback(null, 'def', 456);
-                });
-            }
-            util.waterfall([
-                [ dosomething, 'abc', 123 ],
-                function(a1, a2, wfcb) {
-                    assert(a1 == 'def');
-                    assert(a2 == 456);
-                    wfcb();
-                },
-                [ 'ghi', 789 ],
-                function(a1, a2, wfcb) {
-                    assert(a1 == 'ghi');
-                    assert(a2 == 789);
-                    wfcb();
-                },
-                [ 'ghi', 789 ],
-                [ function(a2, a3, a4, wfcb) {
-                    assert(a2 == 'ghi');
-                    assert(a3 == 789);
-                    assert(a4 == 456);
-                    wfcb();
-                }, util.wf1, util.wf2, 456 ],
-                [ function(a1, wfcb) {
-                    assert(a1 == 'abc');
-                    wfcb('error 456');
-                }, 'abc', util.wferr ],
-                function(tmperr, wfcb) {
-                    assert(tmperr == 'error 456');
-                    wfcb(null, 357, 791);
-                },
-                [ util.wf2 ],
-                function(a1, wfcb) {
-                    assert(a1 == 791);
-                    wfcb();
-                },
-                [ function(a1, wfcb) {
-                    assert(a1 == 23423);
-                    wfcb('to be inverted error');
-                }, 23423, util.wfinvert ],
-                [ function(a1, wfcb) {
-                    assert(a1 == 4567);
-                    wfcb('to be ignored error');
-                }, 4567, util.wfignore ]
-            ], wfcb);
-        },
-        function(wfcb) {
             log('libutil.passCallbackArgs');
             util.waterfall([
                 function(wfcb2) {
