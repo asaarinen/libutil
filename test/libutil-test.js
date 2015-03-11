@@ -505,6 +505,15 @@ exports.test0 = function(testcb) {
             });
         },
         function(wfcb) {
+            var obj = { a: 345, b: { r: 24, g: 655, b: 'foobar', re: [ 34, 23, 'test', { t: 4, y: 'barfoo' } ] }};
+            var str = util.prettify(obj);
+            assert(typeof str == 'string');
+            assert(str);
+            util.log('stringified: ' + JSON.stringify(obj));
+            util.log('prettified: \n' + str);
+            wfcb();
+        },
+        function(wfcb) {
             log('got through');
             wfcb();
         }
