@@ -1,6 +1,6 @@
 {
   "name": "libutil",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "generic javascript utilities for use within node.js",
   "main": "index.js",
   "repository": {
