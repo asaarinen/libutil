@@ -11,6 +11,7 @@ var path = require('path');
 exports.test0 = function(testcb) {
 
     var tmpfilewrite = null;
+    var zipdir = null, zipfile = null;
 
     function localp(str) {
         return path.normalize(__dirname + '/../' + str);
@@ -117,6 +118,27 @@ exports.test0 = function(testcb) {
             }
             assert(testfs.length == 0);
             wfcb();
+        },
+        function(wfcb) { // zip / unzip
+            fsutil.zipFile2(localp('testdata/test.jpg'), 'boo.jpg', wfcb);
+        },
+        function(tmpdir, filename, wfcb) {
+            zipdir = tmpdir;
+            zipfile = filename;
+            fsutil.unzipFile0(zipfile, 'boo.jpg', zipdir.dirname() + '/far.jpg', wfcb);
+        },
+        function(wfcb) {
+            fsutil.getFileHash2(zipdir.dirname() + '/far.jpg', wfcb);
+        },
+        function(md5sum, base64sum, wfcb) {
+            assert(md5sum == 'ba4112829550842f4fa5920d253ce801');
+            assert(base64sum == 'ukESgpVQhC9PpZINJTzoAQ==');
+
+            fsutil.unzipFile0(zipfile, 'boo2.jpg', zipdir.dirname() + '/far2.jpg', function(err) {
+                assert(err);
+                log('unzipping nonexistent file correctly caused error: ' + err);
+                zipdir.release(wfcb);
+            });
         }
     ], testcb);
     
